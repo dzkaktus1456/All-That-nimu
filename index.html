@@ -154,13 +154,26 @@
 
     // Tìm kiếm
     search.addEventListener('input', () => {
-      const term = search.value.toLowerCase();
-      cards.forEach(card => {
-        const title = card.querySelector('.anime-title').textContent.toLowerCase();
-        const subtitle = card.querySelector('.anime-subtitle').textContent.toLowerCase();
-        card.style.display = (title.includes(term) || subtitle.includes(term)) ? "block" : "none";
-      });
-    });
+  const term = search.value.toLowerCase();
+  const activeTab = document.querySelector('.tabs button.active').textContent.trim();
+
+  cards.forEach(card => {
+    const title = card.querySelector('.anime-title').textContent.toLowerCase();
+    const subtitle = card.querySelector('.anime-subtitle').textContent.toLowerCase();
+    const cat = card.getAttribute('data-category');
+    const tag = card.getAttribute('data-tag') || "";
+
+    if (term === "") {
+      // Không có từ khóa, hiển thị lại theo tab hiện tại
+      const matchTab = (activeTab === "Top Tier") ? tag.includes("top") : (cat === activeTab);
+      card.style.display = matchTab ? "block" : "none";
+    } else {
+      // Có từ khóa, hiển thị toàn bộ những cái khớp từ
+      const matchSearch = title.includes(term) || subtitle.includes(term);
+      card.style.display = matchSearch ? "block" : "none";
+    }
+  });
+});
   </script>
 </body>
 </html>
