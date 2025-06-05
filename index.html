@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All That Anime</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #aaffdd;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 20px 10px 0;
+    }
+    header h1 {
+      font-size: 2em;
+      color: #66ffcc;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .tabs button {
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #111;
+      color: #aaa;
+      transition: 0.3s;
+    }
+    .tabs button.active {
+      background-color: #33e1b4;
+      color: black;
+    }
+    .search-box {
+      text-align: center;
+      margin: 10px 0;
+    }
+    .search-box input {
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+      border-radius: 8px;
+      border: none;
+      background-color: #1a1a1a;
+      color: #aaffdd;
+    }
+    .anime-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .anime-card {
+      background-color: #111;
+      border-radius: 16px;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      color: #aaffdd;
+      box-shadow: 0 0 10px #0f0f0f;
+      transition: transform 0.3s ease;
+    }
+    .anime-card:hover {
+      transform: scale(1.05);
+    }
+    .anime-cover {
+      width: 100%;
+      border-radius: 12px;
+    }
+    .anime-title {
+      font-size: 1.1em;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .anime-subtitle {
+      font-size: 0.9em;
+      color: #88ccbb;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>All That Anime</h1>
+    <div class="tabs">
+      <button>TV Series</button>
+      <button>Movies</button>
+      <button>NSFW</button>
+    </div>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Tìm kiếm anime...">
+    </div>
+  </header>
+
+  <main class="anime-list" id="animeList">
+    <a href="chainsaw-man.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/tsk2b3.webp" alt="Chainsaw Man" class="anime-cover"/>
+      <div class="anime-title">Chainsaw Man</div>
+      <div class="anime-subtitle">チェンソーマン</div>
+    </a>
+
+    <a href="maquia.html" class="anime-card" data-category="Movies">
+      <img src="https://files.catbox.moe/qz8e13.jpeg" alt="Maquia" class="anime-cover"/>
+      <div class="anime-title">Maquia</div>
+      <div class="anime-subtitle">Sayonara no Asa ni Yakusoku no Hana o Kazarō</div>
+    </a>
+
+    <a href="made-in-abyss.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/4nz7nh.jpg" alt="Made in Abyss" class="anime-cover"/>
+      <div class="anime-title">Made in Abyss</div>
+      <div class="anime-subtitle">Meido in Abisu</div>
+    </a>
+  </main>
+
+  <script>
+    const tabs = document.querySelectorAll('.tabs button');
+    const cards = document.querySelectorAll('.anime-card');
+    const search = document.getElementById('search');
+
+    function showCategory(category) {
+      tabs.forEach(tab => {
+        if (tab.textContent.trim() === category) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        card.style.display = (category === cat || category === "All") ? "block" : "none";
+      });
+      localStorage.setItem("selectedTab", category);
+    }
+
+    // Gán sự kiện click
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const category = tab.textContent.trim();
+        showCategory(category);
+      });
+    });
+
+    // Khởi động: lấy tab đã chọn trước đó
+    const savedTab = localStorage.getItem("selectedTab") || "TV Series";
+    showCategory(savedTab);
+
+    // Tìm kiếm
+    search.addEventListener('input', () => {
+      const term = search.value.toLowerCase();
+      cards.forEach(card => {
+        const title = card.querySelector('.anime-title').textContent.toLowerCase();
+        const subtitle = card.querySelector('.anime-subtitle').textContent.toLowerCase();
+        card.style.display = (title.includes(term) || subtitle.includes(term)) ? "block" : "none";
+      });
+    });
+  </script>
+</body>
+</html>
