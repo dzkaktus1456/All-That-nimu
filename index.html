@@ -53,6 +53,18 @@
       background-color: #1a1a1a;
       color: #aaffdd;
     }
+    .sort-box {
+      text-align: center;
+      margin: 10px 0;
+    }
+    .sort-box button {
+      padding: 8px 14px;
+      background-color: #111;
+      color: #6fffd2;
+      border: 1px solid #222;
+      border-radius: 6px;
+      cursor: pointer;
+    }
     .anime-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -98,6 +110,9 @@
     <div class="search-box">
       <input type="text" id="search" placeholder="Tìm kiếm anime...">
     </div>
+    <div class="sort-box">
+      <button onclick="toggleSort()" id="sortBtn">Sắp xếp A → Z</button>
+    </div>
   </header>
 
   <main class="anime-list" id="animeList">
@@ -119,32 +134,28 @@
       <div class="anime-subtitle">Meido in Abisu</div>
     </a>
 
-<a href="kanamemo.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/k0rq1i.jpg" alt="Kanamemo" class="anime-cover"/>
-  <div class="anime-title">Kanamemo</div>
-  <div class="anime-subtitle">(Eng sub)</div>
-</a>
+    <a href="kanamemo.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/k0rq1i.jpg" alt="Kanamemo" class="anime-cover"/>
+      <div class="anime-title">Kanamemo</div>
+      <div class="anime-subtitle">(Eng sub)</div>
+    </a>
 
-<a href="air.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/v4cdzk.jpeg" alt="Air" class="anime-cover"/>
-  <div class="anime-title">Air</div>
-      <div class="anime-subtitle"></div>
-</a>
+    <a href="air.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/v4cdzk.jpeg" alt="Air" class="anime-cover"/>
+      <div class="anime-title">Air</div>
+    </a>
 
-<a href="isekai-ojisan.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/n3nylu.jpg" alt="Isekai Ojisan" class="anime-cover"/>
-  <div class="anime-title">Isekai Ojisan</div>
-  <div class="anime-subtitle">Chú tôi trở về từ dị giới</div>
-  <div class="anime-subtitle"></div>
-</a>
+    <a href="isekai-ojisan.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/n3nylu.jpg" alt="Isekai Ojisan" class="anime-cover"/>
+      <div class="anime-title">Isekai Ojisan</div>
+      <div class="anime-subtitle">Chú tôi trở về từ dị giới</div>
+    </a>
 
-<a href="oyasumi-sex.html" class="anime-card" data-category="NSFW">
-  <img src="https://files.catbox.moe/ww6d3e.jpeg" alt="Oyasumi Sex" class="anime-cover"/>
-  <div class="anime-title">Oyasumi Sex</div>
-  <div class="anime-subtitle">Goodnight Sex</div>
-</a>
-</a>
-
+    <a href="oyasumi-sex.html" class="anime-card" data-category="NSFW">
+      <img src="https://files.catbox.moe/ww6d3e.jpeg" alt="Oyasumi Sex" class="anime-cover"/>
+      <div class="anime-title">Oyasumi Sex</div>
+      <div class="anime-subtitle">Goodnight Sex</div>
+    </a>
   </main>
 
   <script>
@@ -154,20 +165,15 @@
 
     function showCategory(category) {
       tabs.forEach(tab => {
-        if (tab.textContent.trim() === category) {
-          tab.classList.add('active');
-        } else {
-          tab.classList.remove('active');
-        }
+        tab.classList.toggle('active', tab.textContent.trim() === category);
       });
-      cards.forEach(card => {
+      document.querySelectorAll('.anime-card').forEach(card => {
         const cat = card.getAttribute('data-category');
         card.style.display = (category === cat || category === "All") ? "block" : "none";
       });
       localStorage.setItem("selectedTab", category);
     }
 
-    // Gán sự kiện click
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         const category = tab.textContent.trim();
@@ -175,32 +181,66 @@
       });
     });
 
-    // Khởi động: lấy tab đã chọn trước đó
     const savedTab = localStorage.getItem("selectedTab") || "TV Series";
     showCategory(savedTab);
 
-    // Tìm kiếm
     search.addEventListener('input', () => {
-  const term = search.value.toLowerCase();
-  const activeTab = document.querySelector('.tabs button.active').textContent.trim();
+      const term = search.value.toLowerCase();
+      const activeTab = document.querySelector('.tabs button.active').textContent.trim();
 
-  cards.forEach(card => {
-    const title = card.querySelector('.anime-title').textContent.toLowerCase();
-    const subtitle = card.querySelector('.anime-subtitle').textContent.toLowerCase();
-    const cat = card.getAttribute('data-category');
-    const tag = card.getAttribute('data-tag') || "";
+      cards.forEach(card => {
+        const title = card.querySelector('.anime-title').textContent.toLowerCase();
+        const subtitle = card.querySelector('.anime-subtitle')?.textContent.toLowerCase() || "";
+        const cat = card.getAttribute('data-category');
+        const tag = card.getAttribute('data-tag') || "";
 
-    if (term === "") {
-      // Không có từ khóa, hiển thị lại theo tab hiện tại
-      const matchTab = (activeTab === "Top Tier") ? tag.includes("top") : (cat === activeTab);
-      card.style.display = matchTab ? "block" : "none";
-    } else {
-      // Có từ khóa, hiển thị toàn bộ những cái khớp từ
-      const matchSearch = title.includes(term) || subtitle.includes(term);
-      card.style.display = matchSearch ? "block" : "none";
-    }
-  });
-});
+        if (term === "") {
+          const matchTab = (cat === activeTab);
+          card.style.display = matchTab ? "block" : "none";
+        } else {
+          const matchSearch = title.includes(term) || subtitle.includes(term);
+          card.style.display = matchSearch ? "block" : "none";
+        }
+      });
+    });
+
+    let isSorted = false;
+let originalOrder = [];
+
+function toggleSort() {
+  const container = document.getElementById('animeList');
+  const cards = Array.from(container.querySelectorAll('.anime-card'));
+  const visibleCards = cards.filter(card => card.style.display !== "none");
+  const sortBtn = document.getElementById('sortBtn');
+
+  if (!originalOrder.length) {
+    originalOrder = cards.map(card => card.cloneNode(true));
+  }
+
+  if (!isSorted) {
+    // Sắp xếp các anime đang hiển thị
+    const sorted = [...visibleCards].sort((a, b) => {
+      const titleA = a.querySelector('.anime-title').textContent.trim().toLowerCase();
+      const titleB = b.querySelector('.anime-title').textContent.trim().toLowerCase();
+      return titleA.localeCompare(titleB, 'vi', { numeric: true });
+    });
+
+    // Đưa thẻ đã sắp xếp lên đầu
+    sorted.forEach(card => container.appendChild(card));
+    sortBtn.textContent = "Bỏ sắp xếp";
+    isSorted = true;
+  } else {
+    // Khôi phục vị trí ban đầu của tất cả thẻ
+    originalOrder.forEach(card => {
+      const current = Array.from(container.children).find(c =>
+        c.querySelector('.anime-title').textContent === card.querySelector('.anime-title').textContent
+      );
+      if (current) container.appendChild(current);
+    });
+    sortBtn.textContent = "Sắp xếp A → Z";
+    isSorted = false;
+  }
+}
   </script>
 </body>
 </html>
