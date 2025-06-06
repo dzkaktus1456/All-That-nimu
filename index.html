@@ -1,15 +1,20 @@
-<!DOCTYPE html><html lang="vi">
+<!DOCTYPE html>
+<html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>All That Anime</title>
   <style>
+    /* ===================================
+       DARK THEME (default)
+    =================================== */
     body {
       background-color: #000;
       color: #aaffdd;
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
+      transition: background-color 0.3s, color 0.3s;
     }
     header {
       text-align: center;
@@ -33,7 +38,7 @@
       font-weight: bold;
       background-color: #111;
       color: #aaa;
-      transition: 0.3s;
+      transition: background-color 0.3s, color 0.3s;
     }
     .tabs button.active {
       background-color: #33e1b4;
@@ -51,6 +56,7 @@
       border: none;
       background-color: #1a1a1a;
       color: #aaffdd;
+      transition: background-color 0.3s, color 0.3s;
     }
     .sort-box {
       text-align: center;
@@ -63,6 +69,7 @@
       border: 1px solid #222;
       border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
     }
     .anime-list {
       display: grid;
@@ -78,7 +85,7 @@
       text-decoration: none;
       color: #aaffdd;
       box-shadow: 0 0 10px #0f0f0f;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s, background-color 0.3s, color 0.3s;
     }
     .anime-card:hover {
       transform: scale(1.05);
@@ -96,24 +103,127 @@
       font-size: 0.9em;
       color: #88ccbb;
     }
+
+    /* Back to Top Button */
+    #toTopBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 99;
+      font-size: 18px;
+      border: none;
+      outline: none;
+      background-color: #111;
+      color: #6fffd2;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 10px;
+      display: none;
+      box-shadow: 0 0 8px #000;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #toTopBtn:hover {
+      background-color: #33e1b4;
+      color: #000;
+    }
+
+    /* Theme Toggle Button (fixed top-right) */
+    #themeToggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background-color: #111;
+      color: #6fffd2;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #themeToggle:hover {
+      background-color: #33e1b4;
+      color: #000;
+    }
+
+    /* ===================================
+       LIGHT THEME OVERRIDES
+    =================================== */
+    body.light {
+      background-color: #f4f7f9;
+      color: #004f3a;
+    }
+    body.light header h1 {
+      color: #66ccaf;
+    }
+    body.light .tabs button {
+      background-color: #e0f7f4;
+      color: #004f3a;
+      border: 1px solid #b2e8dd;
+    }
+    body.light .tabs button.active {
+      background-color: #33e1b4;
+      color: #fff;
+    }
+    body.light .search-box input {
+      background-color: #fff;
+      color: #004f3a;
+    }
+    body.light .sort-box button {
+      background-color: #e0f7f4;
+      color: #004f3a;
+      border: 1px solid #b2e8dd;
+    }
+    body.light .anime-card {
+      background-color: #fff;
+      color: #004f3a;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    body.light .anime-card:hover {
+      background-color: #e0f7f4;
+    }
+    body.light .anime-subtitle {
+      color: #26715d;
+    }
+    body.light #toTopBtn {
+      background-color: #e0f7f4;
+      color: #004f3a;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    body.light #toTopBtn:hover {
+      background-color: #33e1b4;
+      color: #fff;
+    }
+    body.light #themeToggle {
+      background-color: #e0f7f4;
+      color: #004f3a;
+    }
+    body.light #themeToggle:hover {
+      background-color: #33e1b4;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>All That Anime</h1>
-<div id="anime-counts" style="color: #aaf0d1; margin-top: 10px; font-size: 1em;"></div>
-<div class="tabs">
-  <button data-category="TV Series">TV Series</button>
-  <button data-category="Movies">Movies</button>
-  <button data-category="NSFW">NSFW</button>
-</div>
+    <div id="anime-counts" style="margin-top: 10px; font-size: 1em;"></div>
+    <div class="tabs">
+      <button data-category="TV Series">TV Series</button>
+      <button data-category="Movies">Movies</button>
+      <button data-category="NSFW">NSFW</button>
+    </div>
     <div class="search-box">
       <input type="text" id="search" placeholder="Tìm kiếm anime...">
     </div>
     <div class="sort-box">
       <button onclick="toggleSort()" id="sortBtn">Sắp xếp A → Z</button>
     </div>
-  </header>  
+  </header>
+
+  <!-- THEME TOGGLE (fixed) -->
+  <button id="themeToggle">🌙 Dark</button>
 
   <main class="anime-list" id="animeList">
     <a href="chainsaw-man.html" class="anime-card" data-category="TV Series">
@@ -143,6 +253,7 @@
     <a href="air.html" class="anime-card" data-category="TV Series">
       <img src="https://files.catbox.moe/v4cdzk.jpeg" alt="Air" class="anime-cover"/>
       <div class="anime-title">Air</div>
+      <div class="anime-subtitle">—</div>
     </a>
 
     <a href="isekai-ojisan.html" class="anime-card" data-category="TV Series">
@@ -156,40 +267,46 @@
       <div class="anime-title">Oyasumi Sex</div>
       <div class="anime-subtitle">Goodnight Sex</div>
     </a> 
-  
-<a href="nichijou.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/mg2y7q.jpg" alt="Nichijou" class="anime-cover"/>
-  <div class="anime-title">Nichijou</div>
-  <div class="anime-subtitle">My Ordinary Life</div>
-</a>
 
-<a href="dagashi-kashi.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/xv14ws.webp" alt="Dagashi Kashi" class="anime-cover"/>
-  <div class="anime-title">Dagashi Kashi</div>
-  <div class="anime-subtitle">Kẹo Siêu Ngọt</div>
-</a>
+    <a href="nichijou.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/mg2y7q.jpg" alt="Nichijou" class="anime-cover"/>
+      <div class="anime-title">Nichijou</div>
+      <div class="anime-subtitle">My Ordinary Life</div>
+    </a>
 
-<a href="violet-evergarden.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/7d2o5p.jpg" alt="Violet Evergarden" class="anime-cover"/>
-  <div class="anime-title">Violet Evergarden</div>
-  <div class="anime-subtitle">Violet Evergarden – Hình nhân tự động thủ ký</div>
-</a>
+    <a href="dagashi-kashi.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/xv14ws.webp" alt="Dagashi Kashi" class="anime-cover"/>
+      <div class="anime-title">Dagashi Kashi</div>
+      <div class="anime-subtitle">Kẹo Siêu Ngọt</div>
+    </a>
 
-<a href="sakurasou-no-pet-na-kanojo.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/3i6bk7.webp" alt="Sakurasou no Pet na Kanojo" class="anime-cover"/>
-  <div class="anime-title">Sakurasou no Pet na Kanojo</div>
-  <div class="anime-subtitle">Gái Nuôi Nhà Sakurasou</div>
-</a>
+    <a href="violet-evergarden.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/7d2o5p.jpg" alt="Violet Evergarden" class="anime-cover"/>
+      <div class="anime-title">Violet Evergarden</div>
+      <div class="anime-subtitle">Violet Evergarden – Hình nhân tự động thủ ký</div>
+    </a>
 
-<a href="plastic-memories.html" class="anime-card" data-category="TV Series">
-  <img src="https://files.catbox.moe/oy2a4g.png" alt="Plastic Memories" class="anime-cover"/>
-  <div class="anime-title">Plastic Memories</div>
-  <div class="anime-subtitle"></div>
-</a>
+    <a href="sakurasou-no-pet-na-kanojo.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/3i6bk7.webp" alt="Sakurasou no Pet na Kanojo" class="anime-cover"/>
+      <div class="anime-title">Sakurasou no Pet na Kanojo</div>
+      <div class="anime-subtitle">Gái Nuôi Nhà Sakurasou</div>
+    </a>
 
-  </main>  
+    <a href="plastic-memories.html" class="anime-card" data-category="TV Series">
+      <img src="https://files.catbox.moe/oy2a4g.png" alt="Plastic Memories" class="anime-cover"/>
+      <div class="anime-title">Plastic Memories</div>
+      <div class="anime-subtitle">—</div>
+    </a>
 
-<script>
+  </main>
+
+  <!-- BACK TO TOP BUTTON -->
+  <button id="toTopBtn" title="Về đầu trang">⬆</button>
+
+  <script>
+    /* ===================================
+       TAB + NSFW CONFIRMATION
+    =================================== */
     const tabs = document.querySelectorAll('.tabs button');
     const cards = document.querySelectorAll('.anime-card');
     const search = document.getElementById('search');
@@ -198,7 +315,7 @@
       tabs.forEach(tab => {
         tab.classList.toggle('active', tab.textContent.trim() === category);
       });
-      document.querySelectorAll('.anime-card').forEach(card => {
+      cards.forEach(card => {
         const cat = card.getAttribute('data-category');
         card.style.display = (category === cat || category === "All") ? "block" : "none";
       });
@@ -206,35 +323,34 @@
     }
 
     tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const category = tab.dataset.category || tab.textContent.trim();
-
-    if (category === "NSFW") {
-      const agreed = localStorage.getItem("agreedToNSFW");
-      if (!agreed) {
-        const confirmNSFW = confirm("Nội dung bạn sắp xem có thể không phù hợp với mọi đối tượng. Bạn có chắc chắn muốn tiếp tục?");
-        if (!confirmNSFW) return;
-        localStorage.setItem("agreedToNSFW", "true");
-      }
-    }
-
-    showCategory(category);
-  });
-});
+      tab.addEventListener('click', () => {
+        const category = tab.dataset.category || tab.textContent.trim();
+        if (category === "NSFW") {
+          const agreed = localStorage.getItem("agreedToNSFW");
+          if (!agreed) {
+            if (!confirm("⚠️ Nội dung NSFW\nNội dung bạn sắp xem có thể không phù hợp với mọi đối tượng.\nBạn có chắc muốn tiếp tục?")) {
+              return; // Người dùng hủy => không chuyển tab
+            }
+            localStorage.setItem("agreedToNSFW", "true");
+          }
+        }
+        showCategory(category);
+      });
+    });
 
     const savedTab = localStorage.getItem("selectedTab") || "TV Series";
     showCategory(savedTab);
 
+    /* ===================================
+       SEARCH FILTER
+    =================================== */
     search.addEventListener('input', () => {
       const term = search.value.toLowerCase();
       const activeTab = document.querySelector('.tabs button.active').textContent.trim();
-
       cards.forEach(card => {
         const title = card.querySelector('.anime-title').textContent.toLowerCase();
         const subtitle = card.querySelector('.anime-subtitle')?.textContent.toLowerCase() || "";
         const cat = card.getAttribute('data-category');
-        const tag = card.getAttribute('data-tag') || "";
-
         if (term === "") {
           const matchTab = (cat === activeTab);
           card.style.display = matchTab ? "block" : "none";
@@ -245,56 +361,99 @@
       });
     });
 
+    /* ===================================
+       SORT A→Z TOGGLE
+    =================================== */
     let isSorted = false;
-let originalOrder = [];
+    let originalOrder = [];
 
-function toggleSort() {
-  const container = document.getElementById('animeList');
-  const cards = Array.from(container.querySelectorAll('.anime-card'));
-  const visibleCards = cards.filter(card => card.style.display !== "none");
-  const sortBtn = document.getElementById('sortBtn');
+    function toggleSort() {
+      const container = document.getElementById('animeList');
+      const allCards = Array.from(container.querySelectorAll('.anime-card'));
+      const visibleCards = allCards.filter(card => card.style.display !== "none");
+      const sortBtn = document.getElementById('sortBtn');
 
-  if (!originalOrder.length) {
-    originalOrder = cards.map(card => card.cloneNode(true));
-  }
-
-  if (!isSorted) {
-    const sorted = [...visibleCards].sort((a, b) => {
-      const titleA = a.querySelector('.anime-title').textContent.trim().toLowerCase();
-      const titleB = b.querySelector('.anime-title').textContent.trim().toLowerCase();
-      return titleA.localeCompare(titleB, 'vi', { numeric: true });
-    });
-    sorted.forEach(card => container.appendChild(card));
-    sortBtn.textContent = "Bỏ sắp xếp";
-    isSorted = true;
-  } else {
-    originalOrder.forEach(card => {
-      const current = Array.from(container.children).find(c =>
-        c.querySelector('.anime-title').textContent === card.querySelector('.anime-title').textContent
-      );
-      if (current) container.appendChild(current);
-    });
-    sortBtn.textContent = "Sắp xếp A → Z";
-    isSorted = false;
-  }
-}
-
-// Đếm số lượng anime theo data-category
-  document.addEventListener("DOMContentLoaded", () => {
-    const cards = document.querySelectorAll(".anime-card");
-    const counts = {};
-
-    cards.forEach(card => {
-      const category = card.dataset.category || "Uncategorized";
-      counts[category] = (counts[category] || 0) + 1;
-    });
-
-    const container = document.getElementById("anime-counts");
-    if (container) {
-      container.innerHTML = Object.entries(counts)
-        .map(([category, count]) => `${category}: ${count}`)
-        .join(" | ");
+      if (!originalOrder.length) {
+        originalOrder = allCards.map(card => card.cloneNode(true));
+      }
+      if (!isSorted) {
+        const sorted = [...visibleCards].sort((a, b) => {
+          const titleA = a.querySelector('.anime-title').textContent.trim().toLowerCase();
+          const titleB = b.querySelector('.anime-title').textContent.trim().toLowerCase();
+          return titleA.localeCompare(titleB, 'vi', { numeric: true });
+        });
+        sorted.forEach(card => container.appendChild(card));
+        sortBtn.textContent = "Bỏ sắp xếp";
+        isSorted = true;
+      } else {
+        originalOrder.forEach(clone => {
+          const current = Array.from(container.children).find(c =>
+            c.querySelector('.anime-title').textContent === clone.querySelector('.anime-title').textContent
+          );
+          if (current) container.appendChild(current);
+        });
+        sortBtn.textContent = "Sắp xếp A → Z";
+        isSorted = false;
+      }
     }
-  });
-  </script></body>
+
+    /* ===================================
+       COUNT PER CATEGORY
+    =================================== */
+    document.addEventListener("DOMContentLoaded", () => {
+      const cards = document.querySelectorAll(".anime-card");
+      const counts = {};
+      cards.forEach(card => {
+        const category = card.dataset.category || "Uncategorized";
+        counts[category] = (counts[category] || 0) + 1;
+      });
+      const container = document.getElementById("anime-counts");
+      if (container) {
+        container.innerHTML = Object.entries(counts)
+          .map(([category, count]) => `${category}: ${count}`)
+          .join(" | ");
+      }
+    });
+
+    /* ===================================
+       BACK TO TOP BUTTON
+    =================================== */
+    document.addEventListener("DOMContentLoaded", () => {
+      const toTopBtn = document.getElementById("toTopBtn");
+      window.addEventListener("scroll", () => {
+        toTopBtn.style.display = (window.scrollY > 300) ? "block" : "none";
+      });
+      toTopBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+
+    /* ===================================
+       LIGHT/DARK THEME TOGGLE
+       - Default = LIGHT mode
+       - Persists choice in localStorage
+    =================================== */
+    const themeToggle = document.getElementById("themeToggle");
+    const bodyEl = document.body;
+    function setTheme(mode) {
+      if (mode === "dark") {
+        bodyEl.classList.remove("light");
+        themeToggle.textContent = "🌙 Dark";
+      } else {
+        bodyEl.classList.add("light");
+        themeToggle.textContent = "☀️ Light";
+      }
+      localStorage.setItem("themeMode", mode);
+    }
+    // On page load, read stored theme or default to "light"
+    const savedTheme = localStorage.getItem("themeMode") || "light";
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener("click", () => {
+      const current = bodyEl.classList.contains("light") ? "light" : "dark";
+      const next = (current === "light") ? "dark" : "light";
+      setTheme(next);
+    });
+  </script>
+</body>
 </html>
