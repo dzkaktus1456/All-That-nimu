@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!DOCTYPE html><html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -102,18 +101,19 @@
 <body>
   <header>
     <h1>All That Anime</h1>
-    <div class="tabs">
-      <button>TV Series</button>
-      <button>Movies</button>
-      <button>NSFW</button>
-    </div>
+<div id="anime-counts" style="color: #aaf0d1; margin-top: 10px; font-size: 1em;"></div>
+<div class="tabs">
+  <button data-category="TV Series">TV Series</button>
+  <button data-category="Movies">Movies</button>
+  <button data-category="NSFW">NSFW</button>
+</div>
     <div class="search-box">
       <input type="text" id="search" placeholder="Tìm kiếm anime...">
     </div>
     <div class="sort-box">
       <button onclick="toggleSort()" id="sortBtn">Sắp xếp A → Z</button>
     </div>
-  </header>
+  </header>  
 
   <main class="anime-list" id="animeList">
     <a href="chainsaw-man.html" class="anime-card" data-category="TV Series">
@@ -187,9 +187,9 @@
   <div class="anime-subtitle"></div>
 </a>
 
-  </main>
+  </main>  
 
-  <script>
+<script>
     const tabs = document.querySelectorAll('.tabs button');
     const cards = document.querySelectorAll('.anime-card');
     const search = document.getElementById('search');
@@ -206,11 +206,21 @@
     }
 
     tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const category = tab.textContent.trim();
-        showCategory(category);
-      });
-    });
+  tab.addEventListener('click', () => {
+    const category = tab.dataset.category || tab.textContent.trim();
+
+    if (category === "NSFW") {
+      const agreed = localStorage.getItem("agreedToNSFW");
+      if (!agreed) {
+        const confirmNSFW = confirm("Nội dung bạn sắp xem có thể không phù hợp với mọi đối tượng. Bạn có chắc chắn muốn tiếp tục?");
+        if (!confirmNSFW) return;
+        localStorage.setItem("agreedToNSFW", "true");
+      }
+    }
+
+    showCategory(category);
+  });
+});
 
     const savedTab = localStorage.getItem("selectedTab") || "TV Series";
     showCategory(savedTab);
@@ -249,19 +259,15 @@ function toggleSort() {
   }
 
   if (!isSorted) {
-    // Sắp xếp các anime đang hiển thị
     const sorted = [...visibleCards].sort((a, b) => {
       const titleA = a.querySelector('.anime-title').textContent.trim().toLowerCase();
       const titleB = b.querySelector('.anime-title').textContent.trim().toLowerCase();
       return titleA.localeCompare(titleB, 'vi', { numeric: true });
     });
-
-    // Đưa thẻ đã sắp xếp lên đầu
     sorted.forEach(card => container.appendChild(card));
     sortBtn.textContent = "Bỏ sắp xếp";
     isSorted = true;
   } else {
-    // Khôi phục vị trí ban đầu của tất cả thẻ
     originalOrder.forEach(card => {
       const current = Array.from(container.children).find(c =>
         c.querySelector('.anime-title').textContent === card.querySelector('.anime-title').textContent
@@ -272,6 +278,23 @@ function toggleSort() {
     isSorted = false;
   }
 }
-  </script>
-</body>
+
+// Đếm số lượng anime theo data-category
+  document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll(".anime-card");
+    const counts = {};
+
+    cards.forEach(card => {
+      const category = card.dataset.category || "Uncategorized";
+      counts[category] = (counts[category] || 0) + 1;
+    });
+
+    const container = document.getElementById("anime-counts");
+    if (container) {
+      container.innerHTML = Object.entries(counts)
+        .map(([category, count]) => `${category}: ${count}`)
+        .join(" | ");
+    }
+  });
+  </script></body>
 </html>
