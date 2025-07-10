@@ -1,1 +1,226 @@
+/* ===================================
+   CSS VARIABLES (fallback chỉ dùng khi chưa apply theme)
+=================================== */
+:root {
+  --font-main: 'Segoe UI', sans-serif;
 
+  /* fallback tạm */
+  --bg-color: #fff;
+  --text-color: #000;
+  --accent: #33e1b4;
+  --header-color: #333;
+
+  --tab-bg: #ddd;
+  --tab-color: #333;
+  --tab-active-bg: #33e1b4;
+  --tab-active-color: #fff;
+
+  --input-bg: #fff;
+  --input-color: #000;
+
+  --card-bg: #fff;
+  --card-color: #000;
+  --card-shadow: rgba(0,0,0,0.1);
+  --subtitle-color: #555;
+
+  --button-bg: #eee;
+  --button-color: #333;
+  --button-border: #ccc;
+
+  --hover-bg: #33e1b4;
+  --hover-color: #fff;
+
+  --to-top-shadow: rgba(0,0,0,0.2);
+}
+
+/* ===================================
+   BASE STYLES
+=================================== */
+* {
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  padding: 20px 10px 0;
+}
+
+header h1 {
+  font-size: 2em;
+  color: var(--header-color);
+}
+
+/* ===================================
+   TABS
+=================================== */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: var(--tab-bg);
+  color: var(--tab-color);
+}
+
+.tabs button.active {
+  background-color: var(--tab-active-bg);
+  color: var(--tab-active-color);
+}
+
+/* ===================================
+   SEARCH + SORT BOX
+=================================== */
+.search-box,
+.sort-box {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.search-box input {
+  padding: 10px;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--input-bg);
+  color: var(--input-color);
+}
+
+.sort-box button {
+  padding: 8px 14px;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border: 1px solid var(--button-border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sort-box button:hover {
+  background-color: var(--hover-bg);
+  color: var(--hover-color);
+}
+
+/* ===================================
+   ANIME CARD GRID
+=================================== */
+.anime-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.anime-card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--card-color);
+  box-shadow: 0 0 10px var(--card-shadow);
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.anime-card:hover {
+  transform: scale(1.05);
+  background-color: var(--tab-bg);
+}
+
+.anime-cover {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.anime-title {
+  font-size: 1.1em;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.anime-subtitle {
+  font-size: 0.9em;
+  color: var(--subtitle-color);
+}
+
+/* ===================================
+   BACK TO TOP BUTTON
+=================================== */
+#toTopBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 10px;
+  display: none;
+  box-shadow: 0 0 8px var(--to-top-shadow);
+}
+
+#toTopBtn:hover {
+  background-color: var(--hover-bg);
+  color: var(--hover-color);
+}
+
+/* ===================================
+   THEME TOGGLE BUTTON
+=================================== */
+#themeToggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+#themeToggle:hover {
+  background-color: var(--hover-bg);
+  color: var(--hover-color);
+}
+/* ===================================
+   ENSURE BUTTON COLORS RESET ON THEME CHANGE
+=================================== */
+#themeToggle,
+#toTopBtn,
+.sort-box button {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* Force reset on focus loss */
+#themeToggle:not(:hover),
+#toTopBtn:not(:hover),
+.sort-box button:not(:hover) {
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border-color: var(--button-border);
+}
